@@ -31,6 +31,8 @@ namespace Ahlam
             ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
             builder.EntitySet<ServicePath>("ServicePaths");
             builder.EntitySet<ApplicationUser>("ApplicationUsers");
+            builder.EntitySet<Dream>("Dreams");
+            builder.EntitySet<Payment>("Payments");
             // Web API routes
             config.MapHttpAttributeRoutes();
 

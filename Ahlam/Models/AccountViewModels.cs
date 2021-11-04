@@ -29,9 +29,9 @@ namespace Ahlam.Models
     {
         public string Email { get; set; }
 
-        public bool HasRegistered { get; set; }
+        public string id { get; set; }
 
-        public string LoginProvider { get; set; }
+        public string PhoneNumber {get;set;}
     }
 
     public class UserLoginInfoViewModel

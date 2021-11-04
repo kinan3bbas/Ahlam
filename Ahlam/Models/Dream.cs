@@ -33,5 +33,12 @@ namespace Ahlam.Models
         [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}")]
         [Display(Name = "Explanation Date")]
         public DateTime? ExplanationDate { get; set; }
+
+        [Display(Name = "PhoneNumber")]
+        public string PhoneNumber { get; set; }
+
+        public int PaymentId { get; set; }
+
+        public Payment Payment { get; set; }
     }
 }

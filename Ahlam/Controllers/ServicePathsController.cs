@@ -26,8 +26,8 @@ namespace Ahlam.Controllers
     config.Routes.MapODataServiceRoute("odata", "odata", builder.GetEdmModel());
     */
 
-        [AllowAnonymous]
-    public class ServicePathController : ODataController
+    [AllowAnonymous]
+    public class ServicePathsController : ODataController
     {
         private ApplicationDbContext db = new ApplicationDbContext();
         private CoreController core = new CoreController();

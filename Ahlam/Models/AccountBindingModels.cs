@@ -66,6 +66,10 @@ namespace Ahlam.Models
         [Required]
         [Display(Name = "PictureId")]
         public string PictureId { get; set; }
+
+        [Required]
+        [Display(Name = "PhoneNumber")]
+        public string PhoneNumber { get; set; }
     }
 
     public class RegisterExternalBindingModel

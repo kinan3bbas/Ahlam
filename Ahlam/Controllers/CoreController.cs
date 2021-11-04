@@ -141,11 +141,44 @@ namespace Ahlam.Controllers
             return response;
         }
 
-        public ApplicationUser getCurrentUser ()
+        public async Task<ApplicationUser> GetCurrentUserAsync (String phoneNumber)
         {
-            var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
-            return  userManager.FindById(User.Identity.GetUserId());
+            //var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
+            //return  userManager.FindById(User.Identity.GetUserId());
             
+            
+                RegisterBindingModel model = new RegisterBindingModel();
+                model.Name = phoneNumber;
+                model.Type = "Client";
+                model.Status = "Active";
+                model.Username = "FireBase" + DateTime.Now.ToString();
+                model.Email = "Firebase" + DateTime.Now.ToString() + "@gmail.com";
+                model.Password = "1234567";
+                model.ConfirmPassword = "1234567";
+                model.PictureId = "1";
+                model.PhoneNumber = phoneNumber;
+                return await createNewUserAsync(model);          
+            
+        }
+        public async Task<ApplicationUser> createNewUserAsync(RegisterBindingModel model)
+        {
+
+            var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
+            var user = new ApplicationUser() { UserName = model.Username, Email = model.Email };
+            user.Name = model.Name;
+            user.Type = model.Type;
+            user.Status = "Active";
+            user.CreationDate = DateTime.Now;
+            user.LastModificationDate = DateTime.Now;
+            user.PictureId = model.PictureId;
+            if (model.PhoneNumber != null)
+                user.PhoneNumber = model.PhoneNumber;
+
+
+            IdentityResult result = await userManager.CreateAsync(user, model.Password);
+            db.SaveChanges();
+
+            return user;
         }
 
         public Task<IHttpActionResult> throwExcetpion(String message)

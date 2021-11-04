@@ -25,6 +25,8 @@ namespace Ahlam.Controllers
     {
         private const string LocalLoginProvider = "Local";
         private ApplicationUserManager _userManager;
+        private ApplicationDbContext db = new ApplicationDbContext();
+        private CoreController core = new CoreController();
 
         public AccountController()
         {
@@ -52,17 +54,18 @@ namespace Ahlam.Controllers
         public ISecureDataFormat<AuthenticationTicket> AccessTokenFormat { get; private set; }
 
         // GET api/Account/UserInfo
-        [HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
+        [AllowAnonymous]
         [Route("UserInfo")]
-        public UserInfoViewModel GetUserInfo()
+        public UserInfoViewModel GetUserInfo(string phoneNumber)
         {
-            ExternalLoginData externalLogin = ExternalLoginData.FromIdentity(User.Identity as ClaimsIdentity);
+            ApplicationUser user = core.GetCurrentUserAsync(phoneNumber).Result;
+            db.SaveChanges();
+            //ExternalLoginData externalLogin = ExternalLoginData.FromIdentity(User.Identity as ClaimsIdentity);
 
             return new UserInfoViewModel
             {
-                Email = User.Identity.GetUserName(),
-                HasRegistered = externalLogin == null,
-                LoginProvider = externalLogin != null ? externalLogin.LoginProvider : null
+                Email = User.Identity.GetUserName()
+                
             };
         }
 
@@ -335,6 +338,8 @@ namespace Ahlam.Controllers
             user.CreationDate = DateTime.Now;
             user.LastModificationDate = DateTime.Now;
             user.PictureId = model.PictureId;
+            if (model.PhoneNumber != null)
+                user.PhoneNumber = model.PhoneNumber;
 
             
             IdentityResult result = await UserManager.CreateAsync(user, model.Password);
@@ -345,6 +350,26 @@ namespace Ahlam.Controllers
             }
 
             return Ok(user);
+        }
+
+        public async Task<ApplicationUser> createNewUserAsync(RegisterBindingModel model)
+        {
+            
+
+            var user = new ApplicationUser() { UserName = model.Username, Email = model.Email };
+            user.Name = model.Name;
+            user.Type = model.Type;
+            user.Status = "Active";
+            user.CreationDate = DateTime.Now;
+            user.LastModificationDate = DateTime.Now;
+            user.PictureId = model.PictureId;
+            if (model.PhoneNumber != null)
+                user.PhoneNumber = model.PhoneNumber;
+
+
+            IdentityResult result = await UserManager.CreateAsync(user, model.Password);
+
+            return user;
         }
 
         // POST api/Account/RegisterExternal
