@@ -31,6 +31,8 @@ namespace Ahlam.Models
 
         [Display(Name = "Picture Id")]
         public string PictureId { get; set; }
+
+        public string password { get; set; }
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager, string authenticationType)
         {
             // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
@@ -67,10 +69,10 @@ namespace Ahlam.Models
             //    .WithMany(g => g.userWorkBinding)
             //    .HasForeignKey<int>(s => s.UserWorkId);
 
-            //modelBuilder.Entity<ServiceComment>()
-            //    .HasRequired<Service>(s => s.Service)
-            //    .WithMany(g => g.Comments)
-            //    .HasForeignKey<int>(s => s.ServiceId);
+            modelBuilder.Entity<DreamExplanation>()
+                .HasRequired<Dream>(s => s.Dream)
+                .WithMany(g => g.Explanations)
+                .HasForeignKey<int>(s => s.DreamId);
 
             //modelBuilder.Entity<CompetitionPrize>()
             //    .HasRequired<Competition>(s => s.competition)
@@ -90,5 +92,9 @@ namespace Ahlam.Models
 
         public System.Data.Entity.DbSet<Dream> Dreams { get; set; }
         public System.Data.Entity.DbSet<Payment> Payments { get; set; }
+
+        public System.Data.Entity.DbSet<DreamExplanation> DreamExplanations { get; set; }
+
+        public System.Data.Entity.DbSet<UsersDeviceTokens> UsersDeviceTokens { get; set; }
     }
 }

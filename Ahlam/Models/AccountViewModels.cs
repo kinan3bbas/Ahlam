@@ -32,6 +32,16 @@ namespace Ahlam.Models
         public string id { get; set; }
 
         public string PhoneNumber {get;set;}
+
+        public int NumberOfInterpretedDreams { get; set; }
+
+        public string Name { get; set; }
+
+        public string UserName { get; set; }
+
+        public int AvailableBalance { get; set; }
+
+        public int transferedBalance { get; set; }
     }
 
     public class UserLoginInfoViewModel

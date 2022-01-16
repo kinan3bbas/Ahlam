@@ -15,7 +15,7 @@ using Microsoft.AspNet.OData;
 
 using System.Web.Http.OData.Builder;
 using System.Web.Http.OData.Extensions;
-
+using System.Web.Http.Cors;
 
 namespace Ahlam
 {
@@ -25,6 +25,10 @@ namespace Ahlam
         {
             // Web API configuration and services
             // Configure Web API to use only bearer token authentication.
+            // enable cors
+            var cors = new EnableCorsAttribute("*", "*", "*");
+            config.EnableCors(cors);
+
             config.SuppressDefaultHostAuthentication();
             config.Filters.Add(new HostAuthenticationFilter(OAuthDefaults.AuthenticationType));
 
@@ -33,6 +37,8 @@ namespace Ahlam
             builder.EntitySet<ApplicationUser>("ApplicationUsers");
             builder.EntitySet<Dream>("Dreams");
             builder.EntitySet<Payment>("Payments");
+            builder.EntitySet<DreamExplanation>("Explanations");
+            builder.EntitySet<UsersDeviceTokens>("UsersDeviceTokens");
             // Web API routes
             config.MapHttpAttributeRoutes();
 
@@ -43,6 +49,8 @@ namespace Ahlam
             );
 
             config.Routes.MapODataServiceRoute("odata", "odata", builder.GetEdmModel());
+            config.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling
+            = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
 
         }
     }

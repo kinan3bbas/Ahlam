@@ -16,6 +16,7 @@ using Microsoft.Owin.Security.OAuth;
 using Ahlam.Models;
 using Ahlam.Providers;
 using Ahlam.Results;
+using System.Linq;
 
 namespace Ahlam.Controllers
 {
@@ -56,15 +57,27 @@ namespace Ahlam.Controllers
         // GET api/Account/UserInfo
         [AllowAnonymous]
         [Route("UserInfo")]
-        public UserInfoViewModel GetUserInfo(string phoneNumber)
+        public UserInfoViewModel GetUserInfo()
         {
-            ApplicationUser user = core.GetCurrentUserAsync(phoneNumber).Result;
-            db.SaveChanges();
+            //ApplicationUser user = core.GetCurrentUserAsync(phoneNumber).Result;
+            //db.SaveChanges();
             //ExternalLoginData externalLogin = ExternalLoginData.FromIdentity(User.Identity as ClaimsIdentity);
+            ExternalLoginData externalLogin = ExternalLoginData.FromIdentity(User.Identity as ClaimsIdentity);
+
+            var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
+            ApplicationUser user= userManager.FindById(User.Identity.GetUserId());
 
             return new UserInfoViewModel
             {
-                Email = User.Identity.GetUserName()
+                Email = User.Identity.GetUserName(),
+                PhoneNumber = user.PhoneNumber,
+                NumberOfInterpretedDreams=0,
+                AvailableBalance=0,
+                transferedBalance=0,
+                id=user.Id,
+                Name=user.Name,
+                UserName=user.UserName
+                
                 
             };
         }
@@ -338,6 +351,7 @@ namespace Ahlam.Controllers
             user.CreationDate = DateTime.Now;
             user.LastModificationDate = DateTime.Now;
             user.PictureId = model.PictureId;
+            user.password = model.Password;
             if (model.PhoneNumber != null)
                 user.PhoneNumber = model.PhoneNumber;
 

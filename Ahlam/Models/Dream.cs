@@ -40,5 +40,7 @@ namespace Ahlam.Models
         public int PaymentId { get; set; }
 
         public Payment Payment { get; set; }
+
+        public ICollection<DreamExplanation> Explanations { get; set; }
     }
 }
